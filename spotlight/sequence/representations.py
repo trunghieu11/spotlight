@@ -66,6 +66,13 @@ class PoolNet(nn.Module):
         if item_embedding_layer is not None:
             self.item_embeddings = item_embedding_layer
         else:
+            # Return embedding vector for each item, size 3
+            # Examples: embedding([1,2,4,5])
+            # tensor(
+            # [[[-0.0251, -1.6902,  0.7172],
+            # [-0.6431,  0.0748,  0.6969],
+            # [ 1.4970,  1.3448, -0.9685],
+            # [-0.3677, -2.7265, -0.1685]]])
             self.item_embeddings = ScaledEmbedding(num_items, embedding_dim,
                                                    padding_idx=PADDING_IDX,
                                                    sparse=sparse)
@@ -111,6 +118,10 @@ class PoolNet(nn.Module):
             sequence_embedding_sum / (non_padding_entries + 1)
         ).squeeze(3)
 
+        # user_presentations will be like this: (4 products for the input)
+        # tensor([[[ 0.0000, -0.0268,  0.1348, -0.2185, -0.2333],
+        #          [ 0.0000,  0.4263,  0.5161,  0.4722,  0.3455],
+        #          [ 0.0000,  0.1492,  0.0759, -0.1544, -0.0627]]])
         return user_representations[:, :, :-1], user_representations[:, :, -1]
 
     def forward(self, user_representations, targets):

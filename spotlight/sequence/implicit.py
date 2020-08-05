@@ -205,6 +205,11 @@ class ImplicitSequenceModel(object):
             The input sequence dataset.
         """
 
+        # genereate list of short sequences from a long sequence
+        # + window_size is max_sequence_length: length of short sequences
+        # + step_size for number of short sequences. 
+        #       + For example: long sequence with length 10 with step_size = 3 
+        #         will generate 3 short sequences.
         sequences = interactions.sequences.astype(np.int64)
 
         if not self._initialized:
@@ -224,7 +229,8 @@ class ImplicitSequenceModel(object):
 
             for minibatch_num, batch_sequence in enumerate(minibatch(sequences_tensor,
                                                                      batch_size=self._batch_size)):
-
+                
+                # sequence_var is list of short sequences, size of this list equal batch_size
                 sequence_var = batch_sequence
 
                 user_representation, _ = self._net.user_representation(
