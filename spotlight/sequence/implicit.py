@@ -20,6 +20,7 @@ from spotlight.sequence.representations import (PADDING_IDX, CNNNet,
                                                 PoolNet)
 from spotlight.sampling import sample_items
 from spotlight.torch_utils import cpu, gpu, minibatch, set_seed, shuffle
+from spotlight.layers import BloomEmbedding
 
 
 class ImplicitSequenceModel(object):
@@ -231,8 +232,10 @@ class ImplicitSequenceModel(object):
                                                                      batch_size=self._batch_size)):
                 
                 # sequence_var is list of short sequences, size of this list equal batch_size
+                # sequence_var shape: torch.Size([batch_size, window_size])
                 sequence_var = batch_sequence
 
+                # user_presentation shape:  torch.Size([batch_size, embedding_size, window_size])
                 user_representation, _ = self._net.user_representation(
                     sequence_var
                 )
