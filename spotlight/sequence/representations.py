@@ -204,7 +204,8 @@ class LSTMNet(nn.Module):
 
         self.lstm = nn.LSTM(batch_first=True,
                             input_size=embedding_dim,
-                            hidden_size=embedding_dim)
+                            hidden_size=embedding_dim,
+                            num_layers=10)
 
     def user_representation(self, item_sequences):
         """
@@ -334,7 +335,7 @@ class CNNNet(nn.Module):
                  embedding_dim=32,
                  kernel_width=3,
                  dilation=1,
-                 num_layers=1,
+                 num_layers=10,
                  nonlinearity='tanh',
                  residual_connections=True,
                  sparse=False,

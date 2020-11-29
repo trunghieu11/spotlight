@@ -86,6 +86,7 @@ class ImplicitSequenceModel(object):
     def __init__(self,
                  loss='pointwise',
                  representation='pooling',
+                 item_embedding_layer=None,
                  embedding_dim=32,
                  n_iter=10,
                  batch_size=256,
@@ -120,6 +121,7 @@ class ImplicitSequenceModel(object):
         self._optimizer_func = optimizer_func
         self._random_state = random_state or np.random.RandomState()
         self._num_negative_samples = num_negative_samples
+        self._item_embedding_layer = item_embedding_layer
 
         self._num_items = None
         self._net = None
@@ -144,18 +146,22 @@ class ImplicitSequenceModel(object):
         if self._representation == 'pooling':
             self._net = PoolNet(self._num_items,
                                 self._embedding_dim,
+                                item_embedding_layer=self._item_embedding_layer,
                                 sparse=self._sparse)
         elif self._representation == 'cnn':
             self._net = CNNNet(self._num_items,
                                self._embedding_dim,
+                               item_embedding_layer=self._item_embedding_layer,
                                sparse=self._sparse)
         elif self._representation == 'lstm':
             self._net = LSTMNet(self._num_items,
                                 self._embedding_dim,
+                                item_embedding_layer=self._item_embedding_layer,
                                 sparse=self._sparse)
         elif self._representation == 'mixture':
             self._net = MixtureLSTMNet(self._num_items,
                                        self._embedding_dim,
+                                       item_embedding_layer=self._item_embedding_layer,
                                        sparse=self._sparse)
         else:
             self._net = self._representation
